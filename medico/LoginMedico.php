@@ -22,6 +22,7 @@
                     session_start();
                 }
                 $_SESSION['nome_usuario'] = $medico['nome_usuario'];
+                $_SESSION['id_medico'] = $medico['id_medico'];
 
                 header("Location: pagMedico.php");
             }
