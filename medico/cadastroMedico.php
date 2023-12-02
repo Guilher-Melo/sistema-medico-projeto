@@ -26,6 +26,7 @@
             $senha = password_hash($senha, PASSWORD_DEFAULT);
 
             $mysqli -> query("INSERT INTO medico (id_medico, nome, nome_usuario, senha, email, especialidade) VALUES ('$crm', '$nome', '$nomeUsuario', '$senha', '$email', '$especialidade') ");
+            $mysqli -> query("INSERT INTO horarios (id_medico_horario) VALUES ($crm)");
 
             header("Location: LoginMedico.php");
         }

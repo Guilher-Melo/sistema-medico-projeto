@@ -25,11 +25,12 @@ include('../conexao.php')
         if ($quantidade > 0) {
             // Saída de dados para cada linha
             while ($linha = mysqli_fetch_assoc($sql_exec)) {
+                if (!empty($linha['horario_1']) || !empty($linha['horario_2']) || !empty($linha['horario_3'])) {
                 echo '<pre>';
                 echo '<label for="' . $linha['id_medico'] . '">' . $linha["nome"] . ', ' . $linha["especialidade"] . '</label> <br>';
                 echo '<input type="radio" name="medico" id="medico_' . $linha['id_medico'] . '" value="' . $linha['id_medico'] . '"> <br>';
                 echo '<label for="horarios" style="font-family: Arial, sans-serif; font-size: 14px; font-weight: normal;">Selecione um horário:</label> <br>';
-                echo '<select name="horarios" id="horarios"> <br>';
+                echo '<select name="horarios_' . $linha['id_medico'] . '" id="horarios_' . $linha['id_medico'] . '">';
         
                 // Verifica se cada horário existe antes de exibi-lo
                 if (!empty($linha['horario_1'])) {
@@ -47,6 +48,7 @@ include('../conexao.php')
                 echo '</select>';
                 echo '</pre>';
             }
+        }
         } else {
             echo "0 resultados";
         }
