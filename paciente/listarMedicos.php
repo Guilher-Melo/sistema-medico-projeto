@@ -25,6 +25,7 @@ include('../conexao.php')
         if ($quantidade > 0) {
             // Saída de dados para cada linha
             while ($linha = mysqli_fetch_assoc($sql_exec)) {
+                $id_medico = $linha['id_medico'];
                 if (!empty($linha['horario_1']) || !empty($linha['horario_2']) || !empty($linha['horario_3'])) {
                 echo '<pre>';
                 echo '<label for="' . $linha['id_medico'] . '">' . $linha["nome"] . ', ' . $linha["especialidade"] . '</label> <br>';
@@ -47,6 +48,14 @@ include('../conexao.php')
         
                 echo '</select>';
                 echo '</pre>';
+            } else {
+                $sql = "UPDATE medico
+                SET disponivel = 0
+                WHERE id_medico = $id_medico";
+                
+    
+                $sql_exec_2 = $mysqli->query($sql) or die($mysqli->error);
+
             }
         }
         } else {
