@@ -22,23 +22,51 @@ if (isset($_GET['id_medico']) && isset($_GET['horario'])) {
     $sql_code = "SELECT id_medico_horario, horario_1, horario_2, horario_3 FROM horarios WHERE id_medico_horario = $id_medico";
     $sql_exec = $mysqli->query($sql_code) or die($mysqli->error);
 
-    
-    $sql_code_consulta = "INSERT INTO consulta (id_medico_consulta, id_paciente_consulta, horario_inicio, horario_final, data, duracao) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = $mysqli->prepare($sql_code_consulta);
 
-     if ($stmt) {
-        $stmt->bind_param("sissss", $id_medico, $id_paciente, $horarioInicio, $horarioFim, $data_atual, $duracao);
-        
-            $duracao = "1h";
-        
-            $stmt->execute();
-        
-            if ($stmt->affected_rows > 0) {        
-                echo "Consulta marcada!";
-            } else {
-                echo "Erro ao marcar a consulta.";
-            }
-        
+
+
+    
+
+
+        // ...
+
+// Verifique se a consulta já existe para o mesmo médico, paciente e horário
+$consulta_existente_sql = "SELECT * FROM consulta 
+WHERE id_paciente_consulta = ? 
+AND horario_inicio = ? 
+AND horario_final = ? 
+AND data = ?";
+$consulta_existente_stmt = $mysqli->prepare($consulta_existente_sql);
+$consulta_existente_stmt->bind_param("isss", $id_paciente, $horarioInicio, $horarioFim, $data_atual);
+$consulta_existente_stmt->execute();
+$consulta_existente_result = $consulta_existente_stmt->get_result();
+
+if ($consulta_existente_result->num_rows > 0) {
+echo "Já existe uma consulta marcada nesse horário para esse paciente.";
+} else {
+// Continue com a inserção da nova consulta
+$sql_code_consulta = "INSERT INTO consulta (id_medico_consulta, id_paciente_consulta, horario_inicio, horario_final, data, duracao) VALUES (?, ?, ?, ?, ?, ?)";
+$stmt = $mysqli->prepare($sql_code_consulta);
+
+if ($stmt) {
+    $stmt->bind_param("sissss", $id_medico, $id_paciente, $horarioInicio, $horarioFim, $data_atual, $duracao);
+    
+        $duracao = "1h";
+    
+        $stmt->execute();
+    
+        if ($stmt->affected_rows > 0) {        
+            echo "Consulta marcada!";
+        } else {
+            echo "Erro ao marcar a consulta.";
+        }
+    
+// ...
+}
+
+// ...
+
+     
 
     if ($sql_exec->num_rows > 0) {
         while ($row = $sql_exec->fetch_assoc()) {
@@ -56,12 +84,12 @@ if (isset($_GET['id_medico']) && isset($_GET['horario'])) {
         }
     }
     
+ } 
 } else {
     $_SESSION['mensagem'] = 'Parâmetros inválidos. Tente novamente.';
-    header('Location: pagina_mensagem.php');
-    exit();
-}
-}
+     header('Location: pagina_mensagem.php');
+     exit();
+ }
 
 echo "<a href='pagPaciente.php'>Voltar para página principal</a>"
 ?>
