@@ -13,6 +13,7 @@
     <h1>Bem vindo Paciente, <?php echo $_SESSION['nome_usuario'] ?></h1>
     <p>
         <a href="listarMedicos.php">Marcar consulta com um médico</a>
+        <a href="consultasMarcadas.php">Conferir suas consultas</a>
         <a href="logoutPaciente.php">Sair</a>
     </p>
 </body>
