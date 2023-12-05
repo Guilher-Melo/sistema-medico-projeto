@@ -28,6 +28,8 @@ include('../conexao.php')
             echo '<strong>Horário:</strong> ' . $linha['horario_inicio'] . ' - ' . $linha['horario_final'] . '<br>';
             echo '<strong>Data:</strong> ' . $linha['data'] . '<br><br>';
         }
+    } else {
+        echo "Sem consultas marcadas!";
     }
 ?>
 </body>
