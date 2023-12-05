@@ -23,7 +23,6 @@ include('../conexao.php')
         $sql_exec = $mysqli->query($sql_code) or die($mysqli->error);
         $quantidade = $sql_exec->num_rows;
         if ($quantidade > 0) {
-            // Saída de dados para cada linha
             while ($linha = mysqli_fetch_assoc($sql_exec)) {
                 $id_medico = $linha['id_medico'];
                 if (!empty($linha['horario_1']) || !empty($linha['horario_2']) || !empty($linha['horario_3'])) {

@@ -1,6 +1,5 @@
 function marcarConsulta() {
     var selectedMedico = document.querySelector('input[name="medico"]:checked');
-    console.log(selectedMedico)
 
     if (selectedMedico) {
         var idMedico = selectedMedico.value;

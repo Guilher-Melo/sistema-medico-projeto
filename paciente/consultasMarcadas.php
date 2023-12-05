@@ -22,7 +22,6 @@ include('../conexao.php')
     $sql_exec = $mysqli->query($sql_code) or die($mysqli->error);
     $quantidade = $sql_exec->num_rows;
     if ($quantidade > 0) {
-        // Saída de dados para cada linha
         while ($linha = mysqli_fetch_assoc($sql_exec)) {
             echo '<strong>Médico:</strong> ' . $linha['nome_medico'] . '<br>';
             echo '<strong>Horário:</strong> ' . $linha['horario_inicio'] . ' - ' . $linha['horario_final'] . '<br>';

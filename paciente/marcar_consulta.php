@@ -6,7 +6,6 @@
 ?>
 
 <?php
-// Verifique se os parâmetros foram fornecidos na URL
 if (isset($_GET['id_medico']) && isset($_GET['horario'])) {
     $id_medico = $_GET['id_medico'];
     $horario = urldecode($_GET['horario']);
@@ -23,50 +22,36 @@ if (isset($_GET['id_medico']) && isset($_GET['horario'])) {
     $sql_exec = $mysqli->query($sql_code) or die($mysqli->error);
 
 
+// Verifique se a consulta já existe para o mesmo paciente e horário
+    $consulta_existente_sql = "SELECT * FROM consulta 
+    WHERE id_paciente_consulta = ? 
+    AND horario_inicio = ? 
+    AND horario_final = ? 
+    AND data = ?";
+    $consulta_existente_stmt = $mysqli->prepare($consulta_existente_sql);
+    $consulta_existente_stmt->bind_param("isss", $id_paciente, $horarioInicio, $horarioFim, $data_atual);
+    $consulta_existente_stmt->execute();
+    $consulta_existente_result = $consulta_existente_stmt->get_result();
 
+    if ($consulta_existente_result->num_rows > 0) {
+    echo "Já existe uma consulta marcada nesse horário para esse paciente.";
+    } else {
+    $sql_code_consulta = "INSERT INTO consulta (id_medico_consulta, id_paciente_consulta, horario_inicio, horario_final, data, duracao) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $mysqli->prepare($sql_code_consulta);
 
-    
-
-
-        // ...
-
-// Verifique se a consulta já existe para o mesmo médico, paciente e horário
-$consulta_existente_sql = "SELECT * FROM consulta 
-WHERE id_paciente_consulta = ? 
-AND horario_inicio = ? 
-AND horario_final = ? 
-AND data = ?";
-$consulta_existente_stmt = $mysqli->prepare($consulta_existente_sql);
-$consulta_existente_stmt->bind_param("isss", $id_paciente, $horarioInicio, $horarioFim, $data_atual);
-$consulta_existente_stmt->execute();
-$consulta_existente_result = $consulta_existente_stmt->get_result();
-
-if ($consulta_existente_result->num_rows > 0) {
-echo "Já existe uma consulta marcada nesse horário para esse paciente.";
-} else {
-// Continue com a inserção da nova consulta
-$sql_code_consulta = "INSERT INTO consulta (id_medico_consulta, id_paciente_consulta, horario_inicio, horario_final, data, duracao) VALUES (?, ?, ?, ?, ?, ?)";
-$stmt = $mysqli->prepare($sql_code_consulta);
-
-if ($stmt) {
-    $stmt->bind_param("sissss", $id_medico, $id_paciente, $horarioInicio, $horarioFim, $data_atual, $duracao);
-    
-        $duracao = "1h";
-    
-        $stmt->execute();
-    
-        if ($stmt->affected_rows > 0) {        
-            echo "Consulta marcada!";
-        } else {
-            echo "Erro ao marcar a consulta.";
-        }
-    
-// ...
-}
-
-// ...
-
-     
+    if ($stmt) {
+        $stmt->bind_param("sissss", $id_medico, $id_paciente, $horarioInicio, $horarioFim, $data_atual, $duracao);
+        
+            $duracao = "1h";
+        
+            $stmt->execute();
+        
+            if ($stmt->affected_rows > 0) {        
+                echo "Consulta marcada!";
+            } else {
+                echo "Erro ao marcar a consulta.";
+            }
+    }
 
     if ($sql_exec->num_rows > 0) {
         while ($row = $sql_exec->fetch_assoc()) {
