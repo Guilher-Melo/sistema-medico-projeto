@@ -31,6 +31,7 @@ include('../conexao.php')
         echo "Sem consultas marcadas!";
     }
 ?>
+<a href="pagPaciente.php">Voltar para página principal</a>
 </body>
 </html>
 
